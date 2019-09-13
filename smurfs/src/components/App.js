@@ -1,17 +1,23 @@
 import React, { useEffect, useState } from "react";
+import "./App.css";
 import { connect } from "react-redux";
-import { getSmurfs, addingAdditionalSmurfs } from "../actions/index";
+import { getSmurfs, addAdditionalSmurfs } from "../actions/index";
 
-const App = ({ getSmurfs, addingAdditionalSmurfs, smurfs }) => {
-  const [addSmurf, setAddSmurf] = useState({ name: "", age: "", height: "" });
+const App = ({ getSmurfs, addAdditionalSmurfs, smurfs }) => {
+  const [newSmurf, setnewSmurf] = useState({
+    name: "",
+    age: "",
+    height: "",
+    id: ""
+  });
 
   const handleChange = e => {
-    setAddSmurf({ ...addSmurf, [e.target.name]: e.target.value });
+    setnewSmurf({ ...newSmurf, [e.target.name]: e.target.value });
   };
 
   const submitHandler = e => {
     e.preventDefault();
-    addingAdditionalSmurfs(addSmurf);
+    addAdditionalSmurfs(newSmurf);
   };
 
   useEffect(() => {
@@ -22,37 +28,35 @@ const App = ({ getSmurfs, addingAdditionalSmurfs, smurfs }) => {
     <div className="App">
       <h1>SMURFS! 2.0 W/ Redux</h1>
       <div>
-        {smurfs.map(smurfs => (
-          <h1>{smurfs.name}</h1>
-        ))}
-        {smurfs.map(smurfs => (
-          <h2>{smurfs.age}</h2>
-        ))}
-        {smurfs.map(smurfs => (
-          <h3>{smurfs.height}</h3>
+        {smurfs.map(smurf => (
+          <div key={smurf.id}>
+            <h2>{smurf.name}</h2>
+            <h3>Age: {smurf.age}</h3>
+            <h4>Height: {smurf.height}</h4>
+          </div>
         ))}
       </div>
       <form>
         <label>Smurf Adder</label>
         <input
-          placeholder="Smurf Name"
-          type="text"
+          placeholder="Smurfs Name"
           name="name"
-          onChange={handleChange}
+          onChange={e => handleChange(e)}
         />
         <input
           placeholder="Smurfs Age"
-          type="text"
           name="age"
-          onChange={handleChange}
+          onChange={e => handleChange(e)}
         />
         <input
           placeholder="Smurfs Height"
-          type="text"
           name="height"
-          onChange={handleChange}
+          onChange={e => handleChange(e)}
         />
-        <button onClick={submitHandler}>Add Smurf</button>
+        <input id="id" name="id" onChange={e => handleChange(e)} />
+        <button type="submit" onClick={submitHandler}>
+          Add a Smurf
+        </button>
       </form>
     </div>
   );
@@ -66,5 +70,5 @@ const mapStateToProps = state => {
 
 export default connect(
   mapStateToProps,
-  { getSmurfs, addingAdditionalSmurfs }
+  { getSmurfs, addAdditionalSmurfs }
 )(App);
